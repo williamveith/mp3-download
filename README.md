@@ -8,8 +8,7 @@ For docker on Linux Ubuntu, this must be run after OS restarts for docker to wor
 sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 ```
 
-## Quick Setup
-
+## Build to Run
 ```sh
 git clone https://github.com/williamveith/mp3-download.git
 cd mp3-download
@@ -17,18 +16,11 @@ git checkout 4f4dfd7
 docker-compose up --build -d
 ```
 
-## Explanation
-
-### Clone Project from specific commit
-
+## Pull to Develop
 ```sh
 git clone https://github.com/williamveith/mp3-download.git
 cd mp3-download
-git checkout 4f4dfd7
-```
-
-### Build Image and Start Container
-
-```sh
-docker-compose up --build -d
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
