@@ -7,7 +7,7 @@ Downloads YouTube videos as MP3 files based on a CSV list. Sets the title and ar
 ```sh
 git clone https://github.com/williamveith/mp3-download.git
 cd mp3-download
-git checkout 2593ded
+git checkout 49fc9669752a3b98857f853cc0b71623d8bff5d2
 docker-compose up --build -d
 ```
 
