@@ -135,19 +135,19 @@ def delete_json_and_csv_files_except(folder_path, exclude_file):
 
 def save_data_to_json(data):
     try:
-        with directories["compiled_download_list"].open('w') as f:
+        with directories['compiled_download_list'].open('w') as f:
             json.dump(data, f, indent=4)
     except Exception as e:
-        print(f"Error saving data to {directories["compiled_download_list"]}: {e}")
-    return directories["compiled_download_list"]
+        print(f"Error saving data to {directories['compiled_download_list']}: {e}")
+    return directories['compiled_download_list']
 
 
 def compile_download_list():
-    combined_data = get_data_from_files(directories["download_list_folder"])
+    combined_data = get_data_from_files(directories['download_list_folder'])
     unique_combined_data = filter_unique_and_valid_urls(combined_data)
     if unique_combined_data:
         download_list_file = save_data_to_json(unique_combined_data)
-        delete_json_and_csv_files_except(directories["download_list_folder"], download_list_file)
+        delete_json_and_csv_files_except(directories['download_list_folder'], download_list_file)
         return download_list_file
     else:
         print("No valid data found.")

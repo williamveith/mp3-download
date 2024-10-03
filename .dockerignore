@@ -1,0 +1,14 @@
+**/venv
+**/testing
+**/Downloaded Music
+**/Download List
+**/Temp
+**/__pycache__
+**/.DS_Store
+**/.git
+**/.gitignore
+**/.dockerignore
+**/.vscode
+**/docker-compose.yml
+**/Dockerfile
+**/*.md

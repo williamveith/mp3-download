@@ -1,0 +1,16 @@
+services:
+  flask-app:
+    build: .
+    image: mp3-downloader:latest
+    container_name: mp3-downloader-container
+    ports:
+      - "0:5000"
+    volumes:
+      - Downloads:/app/Downloaded Music
+    environment:
+      FLASK_ENV: development
+    restart: on-failure
+
+volumes:
+  Downloads:
+    driver: local

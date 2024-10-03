@@ -7,9 +7,9 @@ from app.clean_up import clean_completed_files
 
 def set_mp3_metadata(entry):
     try:
-        audio = EasyID3(entry["downloaded"])
-        audio['title'] = entry["title"]
-        audio['artist'] = entry["author"]
+        audio = EasyID3(entry['downloaded'])
+        audio['title'] = entry['title']
+        audio['artist'] = entry['author']
         audio.save()
         return True
     except Exception as e:
@@ -19,7 +19,7 @@ def set_mp3_metadata(entry):
 def download_audio(entry):
     ydl_opts = {
         'format': 'bestaudio/best',
-        'outtmpl': str(directories["output_folder"] / f"{entry['title']}.%(ext)s"),
+        'outtmpl': str(directories['output_folder'] / f"{entry['title']}.%(ext)s"),
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
@@ -29,7 +29,7 @@ def download_audio(entry):
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         result = ydl.extract_info(entry['url'], download=True)
-        file_path = directories["output_folder"] / f"{entry['title']}.mp3"
+        file_path = directories['output_folder'] / f"{entry['title']}.mp3"
         return file_path
 
 def process_json_file(json_file):
@@ -45,14 +45,14 @@ def process_json_file(json_file):
                     entry['downloaded'] = str(file_path)
                     print(f"Successfully downloaded to {file_path}")
 
-                    with directories["download_progress"].open('w') as f:
+                    with directories['download_progress'].open('w') as f:
                         json.dump(data, f, indent=4)
 
                     if set_mp3_metadata(entry):
                         entry['tagged'] = True
                         print(f"Successfully set title and artist for {entry['downloaded']}")
 
-                        with directories["download_progress"].open('w') as f:
+                        with directories['download_progress'].open('w') as f:
                             json.dump(data, f, indent=4)
                     else:
                         print(f"Error setting metadata for {entry['downloaded']}")
