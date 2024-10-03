@@ -1,6 +1,6 @@
 import json
 import shutil
-from setup import directories, initialize_templates
+from app.setup import directories
 
 def clean_completed_files():
     try:
@@ -16,7 +16,6 @@ def clean_completed_files():
         else:
             shutil.rmtree(directories["temp_folder"])
             shutil.rmtree(directories["download_list_folder"])
-            initialize_templates()
 
     except Exception as e:
         print(f"An error occurred while processing the temp file: {e}")

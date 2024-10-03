@@ -1,9 +1,9 @@
 import json
 import yt_dlp
 from mutagen.easyid3 import EasyID3
-from setup import directories
-from get_download_list import compile_download_list
-from clean_up import clean_completed_files
+from app.setup import directories
+from app.get_download_list import compile_download_list
+from app.clean_up import clean_completed_files
 
 def set_mp3_metadata(entry):
     try:
@@ -65,7 +65,7 @@ def process_json_file(json_file):
     except Exception as e:
         print(f"An error occurred while processing the JSON file: {e}")
 
-if __name__ == "__main__":
+def download_song():
     download_list = compile_download_list()
     process_json_file(download_list)
     clean_completed_files()

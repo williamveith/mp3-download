@@ -1,6 +1,6 @@
 import csv
 import json
-from setup import directories
+from app.setup import directories
 
 # Output File Name
 COMPILED_DOWNLOAD_LIST_FILE = "Download List.json"

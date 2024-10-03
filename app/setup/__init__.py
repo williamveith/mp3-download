@@ -21,12 +21,6 @@ DOWNLOAD_LIST_FOLDER.mkdir(parents=True, exist_ok=True)
 OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
 TEMP_FOLDER.mkdir(parents=True, exist_ok=True)
 
-# Copy template files from docs to Download List folder
-def initialize_templates():
-    shutil.copytree(DOCS_FOLDER, DOWNLOAD_LIST_FOLDER, dirs_exist_ok=True)
-
-initialize_templates()
-
 # Define directories as a dictionary that can be imported
 directories = {
     "root_folder": root_directory,
