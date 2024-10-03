@@ -1,0 +1,7 @@
+**/venv
+**/testing
+**/Downloaded Music
+**/Download List
+**/Temp
+**/__pycache__
+**/.DS_Store

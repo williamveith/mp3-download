@@ -1,0 +1,22 @@
+import json
+import shutil
+from setup import directories, initialize_templates
+
+def clean_completed_files():
+    try:
+        with directories["download_progress"].open('r') as f:
+            data = json.load(f)
+
+        filtered_data = [entry for entry in data if entry.get("downloaded") == False and entry.get("tagged") == False]
+
+        if filtered_data:
+            with directories["download_progress"].open('w') as f:
+                json.dump(filtered_data, f, indent=4)
+            print(f"{directories["download_progress"].name} contains {len(filtered_data)} entries that were not completed")
+        else:
+            shutil.rmtree(directories["temp_folder"])
+            shutil.rmtree(directories["download_list_folder"])
+            initialize_templates()
+
+    except Exception as e:
+        print(f"An error occurred while processing the temp file: {e}")
