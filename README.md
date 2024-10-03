@@ -7,17 +7,18 @@ Downloads YouTube videos as MP3 files based on a CSV list. Sets the title and ar
 ```sh
 git clone https://github.com/williamveith/mp3-download.git
 cd mp3-download
-git checkout d91596b
+git checkout 4f4dfd7
 docker-compose up --build -d
 ```
 
 ## Explanation
 
-### Clone Project
+### Clone Project from specific commit
 
 ```sh
 git clone https://github.com/williamveith/mp3-download.git
 cd mp3-download
+git checkout 4f4dfd7
 ```
 
 ### Build Image and Start Container
