@@ -11,13 +11,14 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 python app/setup/__init__.py
-open app/Download\ List/Template\ Download\ List.csv
+open 'app/Download List/Template Download List.csv'
 ```
 
 ### Update CSV with url, title, and author for each song. Save As using a new file name
 
 ```sh
 python app/main.py
+open 'app/Downloaded Music'
 ```
 
 ## Explanation
