@@ -1,7 +1,7 @@
 import json
 import yt_dlp
 from mutagen.easyid3 import EasyID3
-from app.setup import directories
+from app.setup import directories, logging
 from app.get_download_list import compile_download_list
 from app.clean_up import clean_completed_files
 
@@ -13,7 +13,7 @@ def set_mp3_metadata(entry):
         audio.save()
         return True
     except Exception as e:
-        print(f"Error setting metadata for {entry['downloaded']}: {e}")
+        logging.error(f"Error setting metadata for {entry['downloaded']}: {e}")
         return False
 
 def download_audio(entry):
@@ -39,31 +39,31 @@ def process_json_file(json_file):
 
         for entry in data:
             if not entry.get("downloaded"):
-                print(f"Downloading {entry['title']} by {entry['author']}")
+                logging.info(f"Downloading {entry['title']} by {entry['author']}")
                 try:
                     file_path = download_audio(entry)
                     entry['downloaded'] = str(file_path)
-                    print(f"Successfully downloaded to {file_path}")
+                    logging.info(f"Successfully downloaded to {file_path}")
 
                     with directories['download_progress'].open('w') as f:
                         json.dump(data, f, indent=4)
 
                     if set_mp3_metadata(entry):
                         entry['tagged'] = True
-                        print(f"Successfully set title and artist for {entry['downloaded']}")
+                        logging.info(f"Successfully set title and artist for {entry['downloaded']}")
 
                         with directories['download_progress'].open('w') as f:
                             json.dump(data, f, indent=4)
                     else:
-                        print(f"Error setting metadata for {entry['downloaded']}")
+                        logging.error(f"Error setting metadata for {entry['downloaded']}")
 
                 except Exception as e:
-                    print(f"Failed to download {entry['title']}: {e}")
+                    logging.error(f"Failed to download {entry['title']}: {e}")
             else:
-                print(f"Already downloaded: {entry['downloaded']}")
+                logging.info(f"Already downloaded: {entry['downloaded']}")
 
     except Exception as e:
-        print(f"An error occurred while processing the JSON file: {e}")
+        logging.error(f"An error occurred while processing the JSON file: {e}")
 
 def download_song():
     download_list = compile_download_list()

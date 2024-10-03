@@ -1,9 +1,6 @@
 import csv
 import json
-from app.setup import directories
-
-# Output File Name
-COMPILED_DOWNLOAD_LIST_FILE = "Download List.json"
+from app.setup import directories, logging
 
 # Define default values for title and author
 DEFAULT_TITLE = "untitled"
@@ -54,7 +51,7 @@ def extract_data_from_csv(file_path, file_type):
                         author = get_value_from_row(row, 2)
                         extracted_data.append(generate_object(url, title, author))
     except Exception as e:
-        print(f"Error reading CSV file {file_path}: {e}")
+        logging.error(f"Error reading CSV file {file_path}: {e}")
     
     return extracted_data
 
@@ -72,14 +69,14 @@ def extract_data_from_json(file_path):
                     author = entry.get(KEY_AUTHOR, None)
                     extracted_data.append(generate_object(url, title, author))
     except Exception as e:
-        print(f"Error reading JSON file {file_path}: {e}")
+        logging.error(f"Error reading JSON file {file_path}: {e}")
     
     return extracted_data
 
 
 def get_data_from_files(folder_path):
     if not folder_path.exists():
-        print(f"The specified folder '{folder_path.name}' does not exist.")
+        logging.info(f"The specified folder '{folder_path.name}' does not exist.")
         return []
 
     combined_data = []
@@ -102,7 +99,7 @@ def get_data_from_files(folder_path):
                 combined_data.extend(extract_data_from_json(file_path))
                 
         except Exception as e:
-            print(f"Error processing file {file_path}: {e}")
+            logging.error(f"Error processing file {file_path}: {e}")
     
     return combined_data
 
@@ -125,20 +122,20 @@ def delete_json_and_csv_files_except(folder_path, exclude_file):
             try:
                 file_path.unlink()
             except Exception as e:
-                print(f"Error deleting file {file_path}: {e}")
+                logging.error(f"Error deleting file {file_path}: {e}")
     
     for file_path in folder_path.glob('*.csv'):
         try:
             file_path.unlink()
         except Exception as e:
-            print(f"Error deleting file {file_path}: {e}")
+            logging.error(f"Error deleting file {file_path}: {e}")
 
 def save_data_to_json(data):
     try:
         with directories['compiled_download_list'].open('w') as f:
             json.dump(data, f, indent=4)
     except Exception as e:
-        print(f"Error saving data to {directories['compiled_download_list']}: {e}")
+        logging.error(f"Error saving data to {directories['compiled_download_list']}: {e}")
     return directories['compiled_download_list']
 
 
@@ -150,7 +147,7 @@ def compile_download_list():
         delete_json_and_csv_files_except(directories['download_list_folder'], download_list_file)
         return download_list_file
     else:
-        print("No valid data found.")
+        logging.info("No valid data found.")
         return None
 
 if __name__ == "__main__":
