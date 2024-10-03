@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Operations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link
+    rel="icon"
+    type="image/x-icon"
+    href="{{ url_for('static', filename='images/favicon.png') }}" />
+    <title>YouTube2MP3</title>
 </head>
 <body>
-    <h1>File Operations</h1>
     <form action="/download-template" method="GET">
         <button type="submit">Download Template</button>
     </form>
-    <br><br>
+    <br><br><br><br>
     <form action="/upload-list" method="POST" enctype="multipart/form-data">
         <input type="file" name="file" accept=".csv">
         <button type="submit">Upload List</button>

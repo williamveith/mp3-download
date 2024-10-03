@@ -2,9 +2,9 @@ services:
   flask-app:
     build: .
     image: mp3-downloader:latest
-    container_name: mp3-downloader-container
+    container_name: app
     ports:
-      - "0:5000"
+      - "0:5001"
     volumes:
       - Downloads:/app/Downloaded Music
     environment:

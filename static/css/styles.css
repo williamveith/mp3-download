@@ -1,0 +1,211 @@
+@media print {
+    @page {
+        size: 8.5in 11in;
+        margin: 0.5in
+    }
+
+    @media print {
+        * {
+            background-color: white !important;
+            color: black !important;
+        }
+    }
+
+    body::after {
+        font-family: 'Courier New', Courier, monospace;
+        content: "Created using Will's template engine | www.linkedin.com/in/william-veith/";
+        position: fixed;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 12px;
+        font-style: italic;
+        color: grey;
+    }
+
+    .navbar {
+        display: none;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+}
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    font-weight: normal;
+    font-style: normal;
+    src: url('../fonts/IBM_Plex_Mono/IBMPlexMono-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    font-weight: normal;
+    font-style: italic;
+    src: url('../fonts/IBM_Plex_Mono/IBMPlexMono-Italic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    font-weight: bold;
+    font-style: normal;
+    src: url('../fonts/IBM_Plex_Mono/IBMPlexMono-Bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    font-weight: bold;
+    font-style: italic;
+    src: url('../fonts/IBM_Plex_Mono/IBMPlexMono-BoldItalic.woff2') format('woff2');
+}
+
+@keyframes box-shadow-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem #5200ff;
+    }
+
+    50% {
+        box-shadow: 0.2rem 0.2rem 0.2rem 0.2rem #3900b3;
+    }
+}
+
+@keyframes box-shadow-pulse-hover {
+
+    0%,
+    100% {
+        box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem #002eff;
+    }
+
+    50% {
+        box-shadow: 0.2rem 0.2rem 0.2rem 0.2rem #00aeff;
+    }
+}
+
+* {
+    font-family: 'IBM Plex Mono', monospace;
+    color: white;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    padding-top: 10%;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #000e;
+}
+
+table {
+    display: block;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 0;
+    width: 2.25in;
+    height: 3.25in;
+    text-align: center;
+    vertical-align: middle;
+    border-style: dashed;
+    border-color: lightgray;
+    border-width: 0.5pt;
+}
+
+img,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+input[type="text"],
+input[type="email"],
+textarea,
+.custom-file-upload {
+    width: 100vw;
+    padding: 12px 20px;
+    margin: 8px 0;
+    font-size: 12pt;
+    background-color: #000;
+}
+
+textarea {
+    height: 150px;
+}
+
+button,
+input[type="text"],
+input[type="email"],
+input[type="submit"],
+textarea,
+.custom-file-upload {
+    animation: box-shadow-pulse 10s ease-in-out infinite;
+    box-sizing: border-box;
+    border-width: 0;
+    border-radius: 8px;
+    resize: none;
+}
+
+button:hover,
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="submit"]:hover,
+textarea:hover,
+button:active,
+input[type="text"]:active,
+input[type="email"]:active,
+input[type="submit"]:active,
+textarea:active,
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+.custom-file-upload:hover,
+.custom-file-upload:active {
+    animation: box-shadow-pulse-hover 10s ease-in-out infinite;
+    outline-width: 0;
+}
+
+label {
+    font-weight: bold;
+    color: white;
+}
+
+pre {
+    font-weight: bold;
+}
+
+button,
+input[type="submit"],
+label.custom-file-upload {
+    width: 200px;
+    height: 50px;
+    font-size: 12pt;
+    background-color: #000;
+}
+
+label.custom-file-upload {
+    font-weight: normal;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+input[type="submit"] {
+    margin-top: 20px;
+    width: 200px;
+    height: 50px;
+}
+
+.navbar {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.input {
+    margin-bottom: 24px;
+}
