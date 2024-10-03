@@ -18,9 +18,9 @@ KEY_TAGGED = "tagged"
 
 def generate_object(url, title=None, author=None):
     return {
-        KEY_URL: url,
-        KEY_TITLE: title if title else DEFAULT_TITLE,
-        KEY_AUTHOR: author if author else DEFAULT_AUTHOR,
+        KEY_URL: url.strip(),
+        KEY_TITLE: title.strip() if title else DEFAULT_TITLE,
+        KEY_AUTHOR: author.strip() if author else DEFAULT_AUTHOR,
         KEY_DOWNLOADED: False,
         KEY_TAGGED: False
     }

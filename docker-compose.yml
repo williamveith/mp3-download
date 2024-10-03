@@ -6,11 +6,7 @@ services:
     ports:
       - "0:5001"
     volumes:
-      - Downloads:/app/Downloaded Music
+      - ${HOME}/Downloads/Downloaded Music:/app/Downloaded Music
     environment:
       FLASK_ENV: development
     restart: on-failure
-
-volumes:
-  Downloads:
-    driver: local
