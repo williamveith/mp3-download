@@ -6,14 +6,14 @@ LABEL description="Downloads YouTube videos as MP3 files based on a CSV list. Se
 LABEL version="1.0"
 LABEL build_date="2024-10-03"
 LABEL vcs-url="https://github.com/williamveith/mp3-download"
-LABEL vcs-ref="d91596b"
+LABEL vcs-ref="4f4dfd7"
 LABEL org.opencontainers.image.title="mp3-download"
 LABEL org.opencontainers.image.authors="software@williamveith.com"
 LABEL org.opencontainers.image.documentation="https://github.com/williamveith/mp3-download/blob/main/README.md"
 LABEL org.opencontainers.image.source="https://github.com/williamveith/mp3-download"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.version="1.0"
-LABEL org.opencontainers.image.revision="d91596b"
+LABEL org.opencontainers.image.revision="4f4dfd7"
 
 
 # Set the working directory inside the container
