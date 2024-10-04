@@ -11,7 +11,7 @@ sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 ## Build to Run
 
 ```sh
-git clone https://github.com/williamveith/mp3-download.git
+git clone git@github.com:williamveith/mp3-download.git
 cd mp3-download
 git checkout 4f4dfd7
 docker-compose up --build -d
@@ -20,7 +20,7 @@ docker-compose up --build -d
 ## Pull to Develop
 
 ```sh
-git clone https://github.com/williamveith/mp3-download.git
+git clone git@github.com:williamveith/mp3-download.git
 cd mp3-download
 python3 -m venv venv
 source venv/bin/activate
