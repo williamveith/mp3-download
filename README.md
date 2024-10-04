@@ -29,3 +29,12 @@ deactivate
 cd ..
 code mp3-download
 ```
+
+## Generating Deployment Key
+
+```sh
+ssh-keygen -t ed25519 -C "williamveith@gmail.com" -f ~/.ssh/id_ed25519_github_mp3-download
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519_github_mp3-download
+pbcopy < ~/.ssh/id_ed25519_github_mp3-download.pub
+```
