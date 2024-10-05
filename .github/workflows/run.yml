@@ -22,7 +22,7 @@ jobs:
       - name: Checkout specific commit
         run: |
           cd mp3-download
-          git checkout ccbf2ab4  # Replace with your specific commit hash or branch
+          git checkout 90dc3d7  # Replace with your specific commit hash or branch
 
       # Step 4: Docker Compose up
       - name: Docker Compose up
