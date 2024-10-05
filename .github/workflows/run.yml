@@ -33,7 +33,20 @@ jobs:
         run: |
           git checkout 614f539d5cfa05c08b742268e2215b8e09267a91
 
-      # Step 4: Log in to GitHub Container Registry
+      # Step 4: Incriment version number
+      - name: Get the latest version tag
+        id: get_version
+        run: |
+            # Get the most recent tag
+            latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+            # Remove the 'v' if it exists (e.g., v1.2.3 -> 1.2.3)
+            version=${latest_tag#v}
+            # Increment the patch version (1.2.3 -> 1.2.4)
+            new_version=$(echo $version | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+            echo "New version: $new_version"
+            echo "::set-output name=version::$new_version"
+
+      # Step 5: Log in to GitHub Container Registry
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
@@ -44,11 +57,20 @@ jobs:
           docker buildx build \
             --platform ${{ matrix.platforms }} \
             --push \
-            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest .
-
-          # Add Docker labels
-          docker buildx imagetools annotate \
-            ghcr.io/williamveith/mp3-download/mp3-downloader:latest \
-            --annotation org.opencontainers.image.source=https://github.com/williamveith/mp3-download \
-            --annotation org.opencontainers.image.description="Multi-arch mp3 downloader container image" \
-            --annotation org.opencontainers.image.licenses=MIT
+            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest . \
+            --label org.label-schema.build-date="$(date --rfc-3339=seconds)" \
+            --label org.label-schema.name="mp3-downloader" \
+            --label org.label-schema.description="Downloads YouTube videos as MP3 files based on a CSV list. Sets the title and artist metadata for the song" \
+            --label org.label-schema.usage="/usr/doc/app-usage.txt" \
+            --label org.label-schema.url="http://myservice.org" \
+            --label org.label-schema.vcs-url="https://github.com/williamveith/mp3-download" \
+            --label org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
+            --label org.label-schema.vendor="WillNet" \
+            --label org.label-schema.version="${{ steps.get_version.outputs.version }}" \
+            --label org.label-schema.schema-version="1.0" \
+            --label org.label-schema.docker.cmd="docker run -d -p 0:5001 -v ${HOME}/Downloads/Downloaded Music:/app/Downloaded Music app" \
+            --label org.label-schema.docker.cmd.devel="docker run -d -p 0:5001 -e ENV=DEV app" \
+            --label org.label-schema.docker.cmd.test="docker run app runtests" \
+            --label org.label-schema.docker.cmd.debug="docker exec -it \$CONTAINER /bin/redis-cli" \
+            --label org.label-schema.docker.cmd.help="docker exec -it \$CONTAINER /bin/app --help" \
+            --label org.label-schema.docker.params="FLASK_ENV=development"
