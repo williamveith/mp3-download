@@ -31,7 +31,7 @@ jobs:
       # Step 3: Checkout specific commit by full hash
       - name: Checkout specific commit
         run: |
-          git checkout a2930b2a3a3d238aa319c6a5dcc7b6130c2676bb
+          git checkout 42ee060169536b06edcf7e3188214d9518bac225
 
       # Step 4: Incriment version number
       - name: Get the latest version tag
