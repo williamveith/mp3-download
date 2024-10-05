@@ -58,7 +58,8 @@ jobs:
         run: |
             docker buildx create --use
             docker buildx build --platform linux/amd64,linux/arm64 --push \
-            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest . \
+            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest \
+            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:${{ steps.get_version.outputs.version }} . \
             --label org.label-schema.build-date="$(date --rfc-3339=seconds)" \
             --label org.label-schema.name="mp3-downloader" \
             --label org.label-schema.description="Downloads YouTube videos as MP3 files based on a CSV list. Sets the title and artist metadata for the song" \
@@ -75,11 +76,3 @@ jobs:
             --label org.label-schema.docker.cmd.debug="docker exec -it \$CONTAINER /bin/redis-cli" \
             --label org.label-schema.docker.cmd.help="docker exec -it \$CONTAINER /bin/app --help" \
             --label org.label-schema.docker.params="FLASK_ENV=development"
-        
-      # Step 7: Annonate multi-architecture
-      - name: Annotate multi-arch image with description
-        run: |
-            docker buildx imagetools create \
-            --append ghcr.io/williamveith/mp3-download/mp3-downloader:latest \
-            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest \
-            --annotation org.opencontainers.image.description="Downloads YouTube videos as MP3 files based on a CSV list. Multi-arch support for amd64 and arm64."
