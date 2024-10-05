@@ -8,7 +8,14 @@ For docker on Linux Ubuntu, this must be run after OS restarts for docker to wor
 sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 ```
 
-## Build to Run
+## Run from Image
+
+```sh
+curl -O https://raw.githubusercontent.com/williamveith/mp3-download/refs/heads/main/docker-compose.yml
+docker-compose up --build -d
+```
+
+## Build Locally & Run
 
 ```sh
 git clone git@github.com:williamveith/mp3-download.git
