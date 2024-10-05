@@ -56,10 +56,8 @@ jobs:
       # Step 6: Build and push multi-architecture Docker images using Docker Buildx
       - name: Build and push multi-arch images with Docker Buildx
         run: |
-          docker buildx create --use  # Create and switch to Buildx
-          docker buildx build \
-            --platform ${{ matrix.platforms }} \
-            --push \
+            docker buildx create --use
+            docker buildx build --platform linux/amd64,linux/arm64 --push \
             --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest . \
             --label org.label-schema.build-date="$(date --rfc-3339=seconds)" \
             --label org.label-schema.name="mp3-downloader" \
@@ -77,3 +75,11 @@ jobs:
             --label org.label-schema.docker.cmd.debug="docker exec -it \$CONTAINER /bin/redis-cli" \
             --label org.label-schema.docker.cmd.help="docker exec -it \$CONTAINER /bin/app --help" \
             --label org.label-schema.docker.params="FLASK_ENV=development"
+        
+      # Step 7: Annonate multi-architecture
+      - name: Annotate multi-arch image with description
+        run: |
+            docker buildx imagetools create \
+            --append ghcr.io/williamveith/mp3-download/mp3-downloader:latest \
+            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest \
+            --annotation org.opencontainers.image.description="Downloads YouTube videos as MP3 files based on a CSV list. Multi-arch support for amd64 and arm64."
