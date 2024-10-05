@@ -1,78 +1,61 @@
 name: run
 
 on:
-  workflow_dispatch:  # Allows manual triggering of the workflow
-
+  workflow_dispatch: null
 permissions:
-  packages: write  # Grant GITHUB_TOKEN permission to push to the container registry
+  packages: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        platforms: [linux/amd64, linux/arm64]  # Define the platforms
+        platforms:
+          - linux/amd64
+          - linux/arm64
 
     steps:
-      # Step 1: Set up SSH agent with the private key from secrets
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      # Step 2: Checkout the repository using SSH and fetch full history
       - name: Checkout repository using SSH
         uses: actions/checkout@v3
         with:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          fetch-depth: 0  # Fetch the full commit history
-
-      # Step 3: Checkout specific commit by full hash
+          fetch-depth: 0
       - name: Checkout specific commit
         run: |
           git checkout 42ee060169536b06edcf7e3188214d9518bac225
-
-      # Step 4: Incriment version number
       - name: Get the latest version tag
         id: get_version
         run: |
-            # Try to get the most recent tag
-            latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0")
-            
-            # Remove the 'v' if it exists (e.g., v1.2.3 -> 1.2.3)
-            version=${latest_tag#v}
-        
-            # Increment the patch version (1.2.3 -> 1.2.4)
-            new_version=$(echo $version | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
-        
-            echo "New version: $new_version"
-            echo "::set-output name=version::$new_version"
-
-      # Step 5: Log in to GitHub Container Registry
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0")
+          version=${latest_tag#v}
+          new_version=$(echo $version | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+          echo "New version: $new_version"
+          echo "version=$new_version" >> $GITHUB_OUTPUT  # Updated to use GITHUB_OUTPUT
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      # Step 6: Build and push multi-architecture Docker images using Docker Buildx
       - name: Build and push multi-arch images with Docker Buildx
-        run: |
-            docker buildx create --use
-            docker buildx build --platform linux/amd64,linux/arm64 --push \
-            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest \
-            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:${{ steps.get_version.outputs.version }} . \
-            --label org.label-schema.build-date="$(date --rfc-3339=seconds)" \
-            --label org.label-schema.name="mp3-downloader" \
-            --label org.label-schema.description="Downloads YouTube videos as MP3 files based on a CSV list. Sets the title and artist metadata for the song" \
-            --label org.label-schema.usage="/usr/doc/app-usage.txt" \
-            --label org.label-schema.url="http://myservice.org" \
-            --label org.label-schema.vcs-url="https://github.com/williamveith/mp3-download" \
-            --label org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
-            --label org.label-schema.vendor="WillNet" \
-            --label org.label-schema.version="${{ steps.get_version.outputs.version }}" \
-            --label org.label-schema.schema-version="1.0" \
-            --label org.label-schema.docker.cmd="docker run -d -p 0:5001 -v ${HOME}/Downloads/Downloaded Music:/app/Downloaded Music app" \
-            --label org.label-schema.docker.cmd.devel="docker run -d -p 0:5001 -e ENV=DEV app" \
-            --label org.label-schema.docker.cmd.test="docker run app runtests" \
-            --label org.label-schema.docker.cmd.debug="docker exec -it \$CONTAINER /bin/redis-cli" \
-            --label org.label-schema.docker.cmd.help="docker exec -it \$CONTAINER /bin/app --help" \
-            --label org.label-schema.docker.params="FLASK_ENV=development"
+        run: |-
+          docker buildx create --use
+          docker buildx build --platform linux/amd64,linux/arm64 --push \
+          --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest \
+          --tag ghcr.io/williamveith/mp3-download/mp3-downloader:${{ steps.get_version.outputs.version }} . \
+          --label org.label-schema.build-date="$(date --rfc-3339=seconds)" \
+          --label org.label-schema.name="mp3-downloader" \
+          --label org.label-schema.description="Downloads YouTube videos as MP3 files based on a CSV list. Sets the title and artist metadata for the song" \
+          --label org.label-schema.usage="/usr/doc/app-usage.txt" \
+          --label org.label-schema.url="http://myservice.org" \
+          --label org.label-schema.vcs-url="https://github.com/williamveith/mp3-download" \
+          --label org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
+          --label org.label-schema.vendor="WillNet" \
+          --label org.label-schema.version="${{ steps.get_version.outputs.version }}" \
+          --label org.label-schema.schema-version="1.0" \
+          --label org.label-schema.docker.cmd="docker run -d -p 0:5001 -v ${HOME}/Downloads/Downloaded Music:/app/Downloaded Music app" \
+          --label org.label-schema.docker.cmd.devel="docker run -d -p 0:5001 -e ENV=DEV app" \
+          --label org.label-schema.docker.cmd.test="docker run app runtests" \
+          --label org.label-schema.docker.cmd.debug="docker exec -it \$CONTAINER /bin/redis-cli" \
+          --label org.label-schema.docker.cmd.help="docker exec -it \$CONTAINER /bin/app --help" \
+          --label org.label-schema.docker.params="FLASK_ENV=development"
