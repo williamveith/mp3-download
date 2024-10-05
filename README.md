@@ -13,7 +13,7 @@ sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 ```sh
 git clone git@github.com:williamveith/mp3-download.git
 cd mp3-download
-git checkout ccbf2ab4
+git checkout 1beaab26605c9b60aa8f0eeb3a3ff88a6150d002
 docker-compose up --build -d
 ```
 

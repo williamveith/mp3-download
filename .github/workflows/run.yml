@@ -8,38 +8,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the full repository with full history
-      - name: Checkout repository with full history
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Fetch all commits, not just the latest
-
-      # Step 2: Set up SSH agent with the private key from secrets
+      # Step 1: Set up SSH agent with the private key from secrets
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Your SSH private key stored in GitHub Secrets
 
-      # Step 3: Install Docker Compose
+      # Step 2: Checkout the repository using SSH and fetch full history
+      - name: Checkout repository using SSH
+        uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          fetch-depth: 0  # Fetch the full commit history
+
+      # Step 3: Checkout specific commit by full hash
+      - name: Checkout specific commit
+        run: |
+          git checkout 1beaab26605c9b60aa8f0eeb3a3ff88a6150d002
+
+      # Step 4: Log in to GitHub Container Registry
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # Step 5: Install Docker Compose
       - name: Install Docker Compose
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
-      # Step 4: Clone specific repository
-      - name: Clone specific repository
+      # Step 6: Build and tag the Docker image
+      - name: Build and tag Docker image
         run: |
-          git clone git@github.com:williamveith/mp3-download.git
-          cd mp3-download
+          docker-compose build
+          docker tag mp3-downloader:latest ghcr.io/${{ github.repository }}/mp3-downloader:latest
 
-      # Step 5: Checkout specific commit by full hash
-      - name: Checkout specific commit
+      # Step 7: Push the Docker image to GitHub Container Registry
+      - name: Push to GitHub Container Registry
         run: |
-          cd mp3-download
-          git checkout 1beaab26605c9b60aa8f0eeb3a3ff88a6150d002
-
-      # Step 6: Docker Compose up
-      - name: Docker Compose up
-        run: |
-          cd mp3-download
-          docker-compose up --build -d
+          docker push ghcr.io/${{ github.repository }}/mp3-downloader:latest
