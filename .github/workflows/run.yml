@@ -37,12 +37,15 @@ jobs:
       - name: Get the latest version tag
         id: get_version
         run: |
-            # Get the most recent tag
-            latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+            # Try to get the most recent tag
+            latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "v0.0.0")
+            
             # Remove the 'v' if it exists (e.g., v1.2.3 -> 1.2.3)
             version=${latest_tag#v}
+        
             # Increment the patch version (1.2.3 -> 1.2.4)
             new_version=$(echo $version | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+        
             echo "New version: $new_version"
             echo "::set-output name=version::$new_version"
 
