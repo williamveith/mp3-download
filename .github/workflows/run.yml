@@ -36,7 +36,7 @@ jobs:
       - name: Checkout specific commit
         run: |
           cd mp3-download
-          git checkout 66a575432d6c7ac9b33d31750b285fd2d0bc71a4
+          git checkout 1beaab26605c9b60aa8f0eeb3a3ff88a6150d002
 
       # Step 6: Docker Compose up
       - name: Docker Compose up
