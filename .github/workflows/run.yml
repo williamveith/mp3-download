@@ -4,18 +4,22 @@ on:
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 permissions:
-    packages: write
+  packages: write  # Grant GITHUB_TOKEN permission to push to the container registry
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platforms: [linux/amd64, linux/arm64]  # Define the platforms
 
     steps:
       # Step 1: Set up SSH agent with the private key from secrets
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Your SSH private key stored in GitHub Secrets
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       # Step 2: Checkout the repository using SSH and fetch full history
       - name: Checkout repository using SSH
@@ -33,19 +37,18 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # Step 5: Install Docker Compose
-      - name: Install Docker Compose
+      # Step 6: Build and push multi-architecture Docker images using Docker Buildx
+      - name: Build and push multi-arch images with Docker Buildx
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+          docker buildx create --use  # Create and switch to Buildx
+          docker buildx build \
+            --platform ${{ matrix.platforms }} \
+            --push \
+            --tag ghcr.io/williamveith/mp3-download/mp3-downloader:latest .
 
-      # Step 6: Build and tag the Docker image
-      - name: Build and tag Docker image
-        run: |
-          docker-compose build
-          docker tag mp3-downloader:latest ghcr.io/${{ github.repository }}/mp3-downloader:latest
-
-      # Step 7: Push the Docker image to GitHub Container Registry
-      - name: Push to GitHub Container Registry
-        run: |
-          docker push ghcr.io/${{ github.repository }}/mp3-downloader:latest
+          # Add Docker labels
+          docker buildx imagetools annotate \
+            ghcr.io/williamveith/mp3-download/mp3-downloader:latest \
+            --annotation org.opencontainers.image.source=https://github.com/williamveith/mp3-download \
+            --annotation org.opencontainers.image.description="Multi-arch mp3 downloader container image" \
+            --annotation org.opencontainers.image.licenses=MIT

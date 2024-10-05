@@ -1,10 +1,6 @@
 # Use an official Python runtime as a parent image
 FROM python:alpine3.20
 
-LABEL vcs-url="https://github.com/williamveith/mp3-download"
-LABEL org.opencontainers.image.source="https://github.com/williamveith/mp3-download"
-
-
 # Set the working directory inside the container
 WORKDIR /
 
@@ -17,8 +13,12 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+ENV FLASK_ENV=development
+
 # Make port 5001 available to the world outside this container
 EXPOSE 5001
+
+VOLUME ["/app/Downloaded Music"]
 
 # Run app.py when the container launches
 CMD ["python", "main.py"]

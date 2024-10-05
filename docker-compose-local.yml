@@ -1,6 +1,7 @@
 services:
   flask-app:
-    image: ghcr.io/williamveith/mp3-download/mp3-downloader:latest
+    build: .
+    image: mp3-downloader:latest
     container_name: app
     ports:
       - "0:5001"
