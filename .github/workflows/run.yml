@@ -1,4 +1,4 @@
-name: run  # This is the name of the workflow
+name: run
 
 on:
   workflow_dispatch:  # Allows manual triggering of the workflow
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository with full history
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Fetch all commits, not just the latest
 
       # Step 2: Set up SSH agent with the private key from secrets
       - name: Set up SSH agent
@@ -20,18 +20,26 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # Step 3: Clone the specific repository using SSH
+      # Step 3: Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      # Step 4: Clone specific repository
       - name: Clone specific repository
         run: |
           git clone git@github.com:williamveith/mp3-download.git
           cd mp3-download
 
-      # Step 4: Checkout specific commit
+      # Step 5: Checkout specific commit by full hash
       - name: Checkout specific commit
         run: |
+          cd mp3-download
           git checkout 66a575432d6c7ac9b33d31750b285fd2d0bc71a4
 
-      # Step 5: Docker Compose up
+      # Step 6: Docker Compose up
       - name: Docker Compose up
         run: |
+          cd mp3-download
           docker-compose up --build -d
