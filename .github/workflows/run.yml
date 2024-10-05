@@ -31,7 +31,7 @@ jobs:
       # Step 3: Checkout specific commit by full hash
       - name: Checkout specific commit
         run: |
-          git checkout d5c760f36cf5ceeb13f691c2d3d4afea2b3df755
+          git checkout 614f539d5cfa05c08b742268e2215b8e09267a91
 
       # Step 4: Log in to GitHub Container Registry
       - name: Log in to GitHub Container Registry
