@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
       - name: Checkout specific commit
         run: |
-          git checkout 42ee060169536b06edcf7e3188214d9518bac225
+          git checkout 2d9f293d04f32d81bc42d0467755acaa9000a9de
       - name: Get the latest version tag
         id: get_version
         run: |
