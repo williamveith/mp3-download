@@ -1,7 +1,10 @@
 name: run
 
 on:
-  workflow_dispatch: null
+  push:
+    branches:
+      - main
+
 permissions:
   packages: write
 
@@ -24,9 +27,12 @@ jobs:
         with:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
           fetch-depth: 0
-      - name: Checkout specific commit
+      - name: Verify commit signature
         run: |
-          git checkout 2d9f293d04f32d81bc42d0467755acaa9000a9de
+          git log -1 --pretty=format:'%G?' | grep -q 'G' || (echo "Commit is not signed. Exiting..." && exit 1)
+      - name: Checkout latest commit
+        run: |
+          git checkout HEAD
       - name: Get the latest version tag
         id: get_version
         run: |
