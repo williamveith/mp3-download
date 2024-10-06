@@ -20,7 +20,6 @@ docker-compose up --build -d
 ```sh
 git clone git@github.com:williamveith/mp3-download.git
 cd mp3-download
-git checkout 1beaab26605c9b60aa8f0eeb3a3ff88a6150d002
 docker-compose up --build -d
 ```
 
