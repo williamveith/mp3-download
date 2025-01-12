@@ -19,6 +19,7 @@ ENV FLASK_ENV=development
 EXPOSE 5001
 
 VOLUME ["/app/Downloaded Music"]
+VOLUME ["/app/Updated Metadata"]
 
 # Run app.py when the container launches
 CMD ["python", "main.py"]
