@@ -5,6 +5,12 @@ from app.setup import directories, logging
 from app.get_download_list import compile_download_list
 from app.clean_up import clean_completed_files
 
+def rewrite_metadata(filepath, title, author):
+    audio = EasyID3(filepath)
+    audio['title'] = title
+    audio['artist'] = author
+    audio.save()
+
 def set_mp3_metadata(entry):
     try:
         audio = EasyID3(entry['downloaded'])

@@ -10,6 +10,7 @@ root_directory = module_directory.parent
 DOCS_FOLDER = module_directory / "docs"
 DOWNLOAD_LIST_FOLDER = root_directory / "Download List"
 OUTPUT_FOLDER = root_directory / "Downloaded Music"
+METADATA_FOLDER = root_directory / "Updated Metadata"
 TEMP_FOLDER = root_directory / "temp"
 
 # Define paths to the relevant files
@@ -20,6 +21,7 @@ LOG_FILE = root_directory / "app.log"
 # Create necessary directories if they do not exist
 DOWNLOAD_LIST_FOLDER.mkdir(parents=True, exist_ok=True)
 OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+METADATA_FOLDER.mkdir(parents=True, exist_ok=True)
 TEMP_FOLDER.mkdir(parents=True, exist_ok=True)
 
 # Define directories as a dictionary that can be imported
@@ -29,6 +31,7 @@ directories = {
     "output_folder": OUTPUT_FOLDER,
     "compiled_download_list": COMPILED_DOWNLOAD_LIST_FILE,
     "temp_folder": TEMP_FOLDER,
+    "metadata_folder": METADATA_FOLDER,
     "download_progress": DOWNLOAD_PROGRESS_FILE,
     "log_file": LOG_FILE
 }

@@ -1,16 +1,20 @@
 from flask import Flask, send_from_directory, request, redirect, url_for, render_template, Response
 from app.setup import directories
-from app.download_music import download_song
+from app.download_music import download_song, rewrite_metadata
 from pathlib import Path
 
 app = Flask(__name__)
 
 UPLOAD_FOLDER = Path('app/Download List')
 DOWNLOAD_FOLDER = Path('app/setup/docs')
+METADATA_FOLDER = Path('app/Updated Metadata')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+app.config['METADATA_FOLDER'] = METADATA_FOLDER
 
-app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static/images', 'favicon.png', mimetype='image/x-icon')
 
 @app.route('/')
 def index():
@@ -37,6 +41,21 @@ def upload_list():
         download_song()
         return redirect(url_for('index'))
     
+@app.route('/update-metadata', methods=['POST'])
+def update_metadata():
+    file = request.files['file']
+    title = request.form.get('title')
+    author = request.form.get('author')
+
+    # Save the uploaded file
+    filepath = app.config['METADATA_FOLDER'] / file.filename
+    file.save(filepath)
+
+    # Process the metadata with your custom function
+    rewrite_metadata(filepath, title, author)
+
+    return redirect(url_for('index'))
+    
 @app.route('/log')
 def display_log():
     def generate():
@@ -50,4 +69,4 @@ def display_log():
     return Response(generate(), mimetype='text/html')
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=5001)
+    app.run(debug=True, host='0.0.0.0', port=5001)
