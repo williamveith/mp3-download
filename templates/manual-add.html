@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Excel-like Form</title>
+    <style>
+        h1 {
+            color: white;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color:rgb(0, 0, 0);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Manual Download</h1>
+
+    <form id="excelForm">
+        <table id="excelTable">
+            <thead>
+                <tr>
+                    {% for column in columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for column in columns %}
+                        <td><input type="text" name="cell_0_{{ loop.index0 }}" placeholder="Enter value" required></td>
+                    {% endfor %}
+                    <td><button type="button" class="btn" onclick="removeRow(this)">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" class="btn" onclick="addRow()">Add Row</button>
+        <button type="submit" class="btn">Submit</button>
+    </form>
+
+    <script>
+        let rowCount = 1;
+
+        function addRow() {
+            const table = document.getElementById('excelTable').getElementsByTagName('tbody')[0];
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                {% for column in columns %}
+                    <td><input type="text" name="cell_${rowCount}_{{ loop.index0 }}" placeholder="Enter value" required></td>
+                {% endfor %}
+                <td><button type="button" class="btn" onclick="removeRow(this)">Remove</button></td>
+            `;
+            table.appendChild(newRow);
+            rowCount++;
+        }
+
+        function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        // Convert the table to an array of arrays
+        function getTableData() {
+            const table = document.getElementById('excelTable');
+            const rows = table.getElementsByTagName('tr');
+            const data = [];
+
+            for (let i = 1; i < rows.length; i++) {  // Skip header row
+                const cells = rows[i].getElementsByTagName('input');
+                const row = [];
+                for (const cell of cells) {
+                    row.push(cell.value.trim());
+                }
+                data.push(row);
+            }
+
+            return data;
+        }
+
+        // Handle form submission
+        document.getElementById('excelForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const tableData = getTableData();
+
+            // Send the data to the backend as JSON
+            const response = await fetch('/manual-add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(tableData)
+            });
+
+            if (response.ok) {
+                window.location.href = "/";
+            } else {
+                alert("Error submitting form.");
+            }
+        });
+    </script>
+
+</body>
+</html>

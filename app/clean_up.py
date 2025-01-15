@@ -16,6 +16,8 @@ def clean_completed_files():
         else:
             shutil.rmtree(directories['temp_folder'])
             shutil.rmtree(directories['download_list_folder'])
+            directories['temp_folder'].mkdir(parents=True, exist_ok=True)
+            directories['download_list_folder'].mkdir(parents=True, exist_ok=True)
 
     except Exception as e:
         logging.error(f"An error occurred while processing the temp file: {e}")
