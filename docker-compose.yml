@@ -6,7 +6,6 @@ services:
       - "0:5001"
     volumes:
       - ${HOME}/Downloads/Downloaded Music:/app/Downloaded Music
-      - ${HOME}/Downloads/Updated Metadata:/app/Updated Metadata
     environment:
       FLASK_ENV: development
     restart: on-failure

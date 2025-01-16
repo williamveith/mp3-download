@@ -2,8 +2,10 @@
 **/testing
 **/Downloaded Music
 **/Download List
-**/Updated Metadata
 **/Temp
 **/__pycache__
 **/.DS_Store
 **/*.log
+build/
+dist/
+*.spec

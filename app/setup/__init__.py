@@ -9,8 +9,7 @@ root_directory = module_directory.parent
 # Define paths to the relevant folders
 DOCS_FOLDER = module_directory / "docs"
 DOWNLOAD_LIST_FOLDER = root_directory / "Download List"
-OUTPUT_FOLDER = root_directory / "Downloaded Music"
-METADATA_FOLDER = root_directory / "Updated Metadata"
+OUTPUT_FOLDER = Path.home() / "Downloads" / "Downloaded Music"
 TEMP_FOLDER = root_directory / "temp"
 
 # Define paths to the relevant files
@@ -21,19 +20,18 @@ LOG_FILE = root_directory / "app.log"
 # Create necessary directories if they do not exist
 DOWNLOAD_LIST_FOLDER.mkdir(parents=True, exist_ok=True)
 OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
-METADATA_FOLDER.mkdir(parents=True, exist_ok=True)
 TEMP_FOLDER.mkdir(parents=True, exist_ok=True)
 
 # Define directories as a dictionary that can be imported
 directories = {
     "root_folder": root_directory,
+    "download_folder": DOCS_FOLDER,
     "download_list_folder": DOWNLOAD_LIST_FOLDER,
     "output_folder": OUTPUT_FOLDER,
     "compiled_download_list": COMPILED_DOWNLOAD_LIST_FILE,
     "temp_folder": TEMP_FOLDER,
-    "metadata_folder": METADATA_FOLDER,
     "download_progress": DOWNLOAD_PROGRESS_FILE,
-    "log_file": LOG_FILE
+    "log_file": LOG_FILE,
 }
 
 # Create a logger
@@ -43,13 +41,13 @@ logger.setLevel(logging.DEBUG)
 # File handler (logs to a file)
 file_handler = logging.FileHandler(LOG_FILE)
 file_handler.setLevel(logging.DEBUG)
-file_formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+file_formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
 file_handler.setFormatter(file_formatter)
 
 # Console handler (logs to the console)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
-console_formatter = logging.Formatter('%(levelname)s - %(message)s')
+console_formatter = logging.Formatter("%(levelname)s - %(message)s")
 console_handler.setFormatter(console_formatter)
 
 # Add handlers to the logger

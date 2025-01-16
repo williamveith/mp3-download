@@ -8,17 +8,13 @@ from flask import (
 )
 from app.setup import directories
 from app.download_music import download_song, rewrite_metadata
-from pathlib import Path
 import csv
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = Path("app/Download List")
-DOWNLOAD_FOLDER = Path("app/setup/docs")
-METADATA_FOLDER = Path("app/Updated Metadata")
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-app.config["DOWNLOAD_FOLDER"] = DOWNLOAD_FOLDER
-app.config["METADATA_FOLDER"] = METADATA_FOLDER
+app.config["UPLOAD_FOLDER"] = directories["download_list_folder"]
+app.config["DOWNLOAD_FOLDER"] = directories["download_folder"]
+app.config["OUTPUT_FOLDER"] = directories["output_folder"]
 
 
 @app.route("/favicon.ico")
@@ -82,7 +78,7 @@ def update_metadata():
     author = request.form.get("author")
 
     # Save the uploaded file
-    filepath = app.config["METADATA_FOLDER"] / file.filename
+    filepath = app.config["OUTPUT_FOLDER"] / file.filename
     file.save(filepath)
 
     # Process the metadata with your custom function
@@ -91,4 +87,5 @@ def update_metadata():
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5001)
+    app.run(port=5002)
+
