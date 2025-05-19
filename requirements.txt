@@ -16,7 +16,7 @@ pycryptodomex==3.21.0
 pyinstaller==6.11.1
 pyinstaller-hooks-contrib==2024.11
 requests==2.32.3
-setuptools==75.8.0
+setuptools==78.1.1
 urllib3==2.2.3
 websockets==13.1
 Werkzeug==3.0.6
